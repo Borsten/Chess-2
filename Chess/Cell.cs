@@ -9,10 +9,10 @@ namespace Chess
 {
     public class Cell
     {
-        public int locX;
-        public int locY;
         public Figure figure;
         public Color bColor;
+        public int locX;
+        public int locY;
 
         public Cell(int locX, int locY, Figure figure, Color bColor)
         {

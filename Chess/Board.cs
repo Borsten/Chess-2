@@ -2,49 +2,48 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace Chess
 {
+    
     public class Board
     {
-        public List<Cell> cells;
+        public Cell[,] cells = new Cell[8, 8];
+        private Color color = Color.White;
+        private Color temp1 = Color.White;
+        private Color temp2 = Color.Black;
+        private Color swap;
+        int count = 0;
 
-        public Board CreateNewBoard(List<Cell> cells)
+        public Board CreateNewBoard(Cell[,] cells)
         {
             Board board = new Board();
-            Color color = Color.White;
-            int count = 0;
-            int comp = 8;
+
             Figure figure = new Rook("Black");
-            for (int i = 0; i < 8; i++)
+            for (int locY = 0; locY < 8; locY++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int locX = 0; locX < 8; locX++)
                 {
                     if ( count % 2 == 0 )
-                        color = Color.White;
+                        color = temp1;
                     else
-                        color = Color.Black;
+                        color = temp2;
                     count++;
-                    if (count == comp)
+                    if (count % 8 == 0)
                     {
-                        if (comp == 8)
-                        {
-                            count = 1;
-                            comp = 9;
-                        }
-                        else
-                        {
-                            count = 0;
-                            comp = 8;
-                        }
+                        swap = temp2;
+                        temp2 = temp1;
+                        temp1 = swap;
                     }
-                    switch (i)
+                    switch (locY)
                     {
                         case 0:
-                            switch (j)
+                            switch (locX)
                             {
                                 case 0:
                                     break;
@@ -78,7 +77,7 @@ namespace Chess
                             figure = new Pawn("White");
                             break;
                         case 7:
-                            switch (j)
+                            switch (locX)
                             {
                                 case 0:
                                     break;
@@ -109,15 +108,55 @@ namespace Chess
                             figure = null;
                             break;                       
                     }
-                    cells.Add(new Cell(i, j, figure, color));
+                    Cell c = new Cell(locX, locY, figure, color);   
+                    cells[locY, locX] = c;
                 }
             }
             board.cells = cells;
-            int x = 0;
             return board;
         }
+        public Board UpdateBoard(Board board, List<Cell> cells)
+        { 
+            return board; 
+        }
+        public void DrawBoard(Board board, Form form)
+        {
+            for (int locY = 0; locY < 8; locY++)
+            {
+                for (int locX = 0; locX < 8; locX++)
+                {
+                    CreateNewButton(locX, locY, board, form);
+                }
+            }
+        }
 
-        public void DrawBoard(Board board)
-        { }
+
+        public void CreateNewButton(int locX, int locY, Board b, Form form)
+        {
+            Cstm_Button button = new Cstm_Button();
+            button.Cell = b.cells[locY, locX];
+            button.Location = new Point(20 + 50 * locX, 20 + 50 * locY);
+            button.Size = new Size(50, 50);
+            button.BackColor = b.cells[locY, locX].bColor;
+            button.Click += btn_Click(b);
+            button.Enabled = false;
+            if (b.cells[locY, locX].figure != null)
+            {
+                if (button.BackColor == Color.Black)
+                    button.ForeColor = Color.White;
+                button.Enabled = true;
+                button.Text = b.cells[locY, locX].figure.color + " " + b.cells[locY, locX].figure.GetType().Name;
+            }
+            form.Controls.Add(button);
+        }
+
+
+
+        private void btn_Click(object sender, ClickEventArgs e)
+        {
+
+        }
     }
+
+
 }

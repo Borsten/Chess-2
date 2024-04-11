@@ -13,5 +13,11 @@ namespace Chess
         {
             this.color = color;
         }
+
+        public override List<Cell> CheckMove(Board board, Cstm_Button button)
+        {
+
+            return new List<Cell>();
+        }
     }
 }
