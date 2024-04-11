@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClickEvent.cs" />
     <Compile Include="Cstm_Button.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -19,10 +19,11 @@ namespace Chess
         private Color temp2 = Color.Black;
         private Color swap;
         int count = 0;
+        public Board board = new Board();
+                
 
         public Board CreateNewBoard(Cell[,] cells)
         {
-            Board board = new Board();
 
             Figure figure = new Rook("Black");
             for (int locY = 0; locY < 8; locY++)
@@ -138,7 +139,7 @@ namespace Chess
             button.Location = new Point(20 + 50 * locX, 20 + 50 * locY);
             button.Size = new Size(50, 50);
             button.BackColor = b.cells[locY, locX].bColor;
-            button.Click += btn_Click(b);
+            button.Click += (sender, e) => s;
             button.Enabled = false;
             if (b.cells[locY, locX].figure != null)
             {
@@ -149,14 +150,11 @@ namespace Chess
             }
             form.Controls.Add(button);
         }
-
-
-
-        private void btn_Click(object sender, ClickEventArgs e)
+        private void btn_Click(object sender, EventArgs e)
         {
-
+            Cstm_Button b = (Cstm_Button)sender;
+            int locX = b.Cell.locX;
+            int locY = b.Cell.locY;
         }
     }
-
-
 }

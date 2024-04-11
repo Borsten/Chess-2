@@ -13,7 +13,7 @@ namespace Chess
     public partial class ChessForm : Form
     {
         public List<Cstm_Button> Buttons = new List<Cstm_Button>();
-        public static Board board = new Board();
+        public Board board = new Board();
 
         public ChessForm()
         {
