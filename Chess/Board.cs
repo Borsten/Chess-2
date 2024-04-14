@@ -12,16 +12,17 @@ namespace Chess
 {
     
     public class Board
-    {
+    {        
         public Cell[,] cells = new Cell[8, 8];
         private Color color = Color.White;
-        private Color temp1 = Color.White;
-        private Color temp2 = Color.Black;
-        private Color swap;
-        int count = 0;
-        public Board board = new Board();
-                
 
+        private ChessForm form;
+
+        public Board GetBoard()
+        {
+            return this;
+        }
+               
         public Board CreateNewBoard(Cell[,] cells)
         {
 
@@ -30,23 +31,17 @@ namespace Chess
             {
                 for (int locX = 0; locX < 8; locX++)
                 {
-                    if ( count % 2 == 0 )
-                        color = temp1;
+                    if ((locX + locY) % 2 == 0)
+                        color = Color.White;
                     else
-                        color = temp2;
-                    count++;
-                    if (count % 8 == 0)
-                    {
-                        swap = temp2;
-                        temp2 = temp1;
-                        temp1 = swap;
-                    }
+                        color = Color.Black;
                     switch (locY)
                     {
                         case 0:
                             switch (locX)
                             {
                                 case 0:
+                                    figure = new Rook("Black");
                                     break;
                                 case 1:
                                     figure = new Knight("Black");
@@ -71,16 +66,23 @@ namespace Chess
                                     break;                                        
                             }
                             break;
-                        case 1:
-                            figure = new Pawn("Black");
+                        case 4:
+                            if (locX == 4)
+                                figure = new Queen("Black");
+                            else
+                                figure = null;
                             break;
-                        case 6:
-                            figure = new Pawn("White");
-                            break;
+                        //case 1:
+                        //    figure = new Pawn("Black");
+                        //    break;
+                        //case 6:
+                        //    figure = new Pawn("White");
+                        //    break;
                         case 7:
                             switch (locX)
                             {
                                 case 0:
+                                    figure = new Rook("White");
                                     break;
                                 case 1:
                                     figure = new Knight("White");
@@ -113,34 +115,43 @@ namespace Chess
                     cells[locY, locX] = c;
                 }
             }
-            board.cells = cells;
-            return board;
+            this.cells = cells;
+            return this;
         }
-        public Board UpdateBoard(Board board, List<Cell> cells)
-        { 
-            return board; 
-        }
-        public void DrawBoard(Board board, Form form)
+
+        public void UpdateBoard(List<Cell> cells)
         {
+            foreach (Cell c in cells)
+            {
+                form.Buttons[c.locY, c.locX].Cell = c;
+                form.Buttons[c.locY, c.locX].BackColor = c.bColor;
+                form.Buttons[c.locY, c.locX].Enabled = true;
+                if (c.figure != null)
+                    form.Buttons[c.locY, c.locX].Text = c.figure.color + " " + c.figure.GetType().Name;
+            }
+        }
+
+        public void DrawBoard(Board board, ChessForm form)
+        {
+            this.form = form;
             for (int locY = 0; locY < 8; locY++)
             {
                 for (int locX = 0; locX < 8; locX++)
                 {
-                    CreateNewButton(locX, locY, board, form);
+                    CreateNewButton(locX, locY, board);
                 }
             }
         }
 
-
-        public void CreateNewButton(int locX, int locY, Board b, Form form)
+        public void CreateNewButton(int locX, int locY, Board b)
         {
             Cstm_Button button = new Cstm_Button();
             button.Cell = b.cells[locY, locX];
             button.Location = new Point(20 + 50 * locX, 20 + 50 * locY);
             button.Size = new Size(50, 50);
             button.BackColor = b.cells[locY, locX].bColor;
-            button.Click += (sender, e) => s;
             button.Enabled = false;
+            button.Click += btn_Click;
             if (b.cells[locY, locX].figure != null)
             {
                 if (button.BackColor == Color.Black)
@@ -148,13 +159,28 @@ namespace Chess
                 button.Enabled = true;
                 button.Text = b.cells[locY, locX].figure.color + " " + b.cells[locY, locX].figure.GetType().Name;
             }
+            form.Buttons[locY, locX] = button;
             form.Controls.Add(button);
         }
+
         private void btn_Click(object sender, EventArgs e)
-        {
+        {           
+            List<Cell> cells = new List<Cell>();
             Cstm_Button b = (Cstm_Button)sender;
             int locX = b.Cell.locX;
             int locY = b.Cell.locY;
+            foreach (Cell cell in form.board.cells)
+            {
+                if (cell.figure == null)
+                    form.Buttons[cell.locY, cell.locX].Enabled = false;
+                if ((cell.locX + cell.locY) % 2 == 0)
+                    form.Buttons[cell.locY, cell.locX].BackColor = Color.White;
+                else
+                    form.Buttons[cell.locY, cell.locX].BackColor = Color.Black;
+            }
+            if (b.Cell.figure != null)
+                cells = b.Cell.figure.CheckMove(this, b);   
+            UpdateBoard(cells);
         }
     }
 }

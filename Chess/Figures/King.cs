@@ -16,7 +16,6 @@ namespace Chess
 
         public override List<Cell> CheckMove(Board board, Cstm_Button button)
         {
-
             return new List<Cell>();
         }
     }

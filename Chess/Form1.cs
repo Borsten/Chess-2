@@ -12,7 +12,7 @@ namespace Chess
 {
     public partial class ChessForm : Form
     {
-        public List<Cstm_Button> Buttons = new List<Cstm_Button>();
+        public Cstm_Button[,] Buttons = new Cstm_Button[8, 8];
         public Board board = new Board();
 
         public ChessForm()
@@ -20,6 +20,22 @@ namespace Chess
             InitializeComponent();
             board = board.CreateNewBoard(new Cell[8, 8]);
             board.DrawBoard(board, this);
+        }
+
+        public ChessForm(ChessForm chess)
+        {
+
+        }
+        public ChessForm GetChessForm()
+        {
+            return this;
+        }
+
+        public void SetForm(ChessForm chess)
+        {
+            Buttons = chess.Buttons;
+            Text = "Setter";
+            Show();
         }
     }
 }

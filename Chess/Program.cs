@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Chess
 {
-    internal static class Program
+    public static class Program
     {
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
