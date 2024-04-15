@@ -10,9 +10,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace Chess
 {
-    
+
     public class Board
-    {        
+    {
         public Cell[,] cells = new Cell[8, 8];
         private Color color = Color.White;
 
@@ -22,7 +22,7 @@ namespace Chess
         {
             return this;
         }
-               
+
         public Board CreateNewBoard(Cell[,] cells)
         {
 
@@ -63,21 +63,21 @@ namespace Chess
                                     break;
                                 case 7:
                                     figure = new Rook("Black");
-                                    break;                                        
+                                    break;
                             }
-                            break;
+                        break;
                         case 4:
                             if (locX == 4)
-                                figure = new Queen("Black");
+                                figure = new King("Black");
                             else
                                 figure = null;
                             break;
                         //case 1:
                         //    figure = new Pawn("Black");
                         //    break;
-                        //case 6:
-                        //    figure = new Pawn("White");
-                        //    break;
+                        case 5:
+                            figure = new Pawn("Black");
+                            break;
                         case 7:
                             switch (locX)
                             {
@@ -109,9 +109,9 @@ namespace Chess
                             break;
                         default:
                             figure = null;
-                            break;                       
+                            break;
                     }
-                    Cell c = new Cell(locX, locY, figure, color);   
+                    Cell c = new Cell(locX, locY, figure, color);
                     cells[locY, locX] = c;
                 }
             }
@@ -123,12 +123,20 @@ namespace Chess
         {
             foreach (Cell c in cells)
             {
-                form.Buttons[c.locY, c.locX].Cell = c;
-                form.Buttons[c.locY, c.locX].BackColor = c.bColor;
-                form.Buttons[c.locY, c.locX].Enabled = true;
-                if (c.figure != null)
-                    form.Buttons[c.locY, c.locX].Text = c.figure.color + " " + c.figure.GetType().Name;
+                if (c.bColor == Color.Red || c.bColor == Color.Yellow)
+                {
+                    form.Buttons[c.locY, c.locX].Cell = c;
+                    form.Buttons[c.locY, c.locX].BackColor = c.bColor;                   
+                    form.Buttons[c.locY, c.locX].Enabled = true;
+                    if (c.figure != null)
+                    {
+                        form.Buttons[c.locY, c.locX].Text = c.figure.color + " " + c.figure.GetType().Name;
+                        if (c.bColor == Color.Black)
+                            form.Buttons[c.locY, c.locX].ForeColor = Color.White;
+                    }
+                }
             }
+            int x = 0;
         }
 
         public void DrawBoard(Board board, ChessForm form)
@@ -164,7 +172,7 @@ namespace Chess
         }
 
         private void btn_Click(object sender, EventArgs e)
-        {           
+        {
             List<Cell> cells = new List<Cell>();
             Cstm_Button b = (Cstm_Button)sender;
             int locX = b.Cell.locX;
@@ -174,12 +182,19 @@ namespace Chess
                 if (cell.figure == null)
                     form.Buttons[cell.locY, cell.locX].Enabled = false;
                 if ((cell.locX + cell.locY) % 2 == 0)
+                {
                     form.Buttons[cell.locY, cell.locX].BackColor = Color.White;
+                    this.cells[locY, locX].bColor = Color.White;
+                }
                 else
+                {
                     form.Buttons[cell.locY, cell.locX].BackColor = Color.Black;
+                    form.Buttons[cell.locY, cell.locX].ForeColor = Color.White;
+                    this.cells[locY, locX].bColor = Color.Black;
+                }
             }
             if (b.Cell.figure != null)
-                cells = b.Cell.figure.CheckMove(this, b);   
+                cells = b.Cell.figure.CheckMove(this, b.Cell);
             UpdateBoard(cells);
         }
     }

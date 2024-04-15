@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    public delegate void ClickEventHandler(object sender, ClickEventArgs e);
-    public class ClickEventArgs : EventArgs 
+    internal class ClickEvent
     {
-        public Board Board { get; set; }
-
-        public ClickEventArgs(Board board)
-        {
-            Board = board;
-        }
     }
 }

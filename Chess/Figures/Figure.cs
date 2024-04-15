@@ -12,9 +12,9 @@ namespace Chess
 
         public Figure(string color)
         {
-            this.color = color;            
+            this.color = color;
         }
 
-        public abstract List<Cell> CheckMove(Board board, Cstm_Button button);
+        public abstract List<Cell> CheckMove(Board board, Cell cell);
     }
 }
