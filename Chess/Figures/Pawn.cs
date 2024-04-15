@@ -16,36 +16,36 @@ namespace Chess
             this.color = color;
         }
 
-        public override List<Cell> CheckMove(Board board, Cstm_Button button)
+        public override List<Cell> CheckMove(Board board, Cell button)
         {
             List<Cell> cells = new List<Cell>();
             int move = 1;
-            if (button.Cell.figure.color == "White")
+            if (button.figure.color == "White")
                 move = -1;
-            if (board.cells[button.Cell.locY + move, button.Cell.locX].figure == null)
+            if (board.cells[button.locY + move, button.locX].figure == null)
             {
-                board.cells[button.Cell.locY + move, button.Cell.locX].bColor = Color.Yellow;
-                cells.Add(board.cells[button.Cell.locY + move, button.Cell.locX]);
-                if (board.cells[button.Cell.locY + move, button.Cell.locX].figure == null)
+                board.cells[button.locY + move, button.locX].bColor = Color.Yellow;
+                cells.Add(board.cells[button.locY + move, button.locX]);
+                if (board.cells[button.locY + move * 2, button.locX].figure == null)
                 {
-                    board.cells[button.Cell.locY + move * 2, button.Cell.locX].bColor = Color.Yellow;
-                    cells.Add(board.cells[button.Cell.locY + move * 2, button.Cell.locX]);
+                    board.cells[button.locY + move * 2, button.locX].bColor = Color.Yellow;
+                    cells.Add(board.cells[button.locY + move * 2, button.locX]);
                 }
             }
-            if (button.Cell.locX > 0 && board.cells[button.Cell.locY + move, button.Cell.locX - 1].figure != null)
+            if (button.locX > 0 && board.cells[button.locY + move, button.locX - 1].figure != null)
             {
-                if (board.cells[button.Cell.locY + move, button.Cell.locX - 1].figure.color != button.Cell.figure.color)
+                if (board.cells[button.locY + move, button.locX - 1].figure.color != button.figure.color)
                 {
-                    board.cells[button.Cell.locY + move, button.Cell.locX - 1].bColor = Color.Red;
-                    cells.Add(board.cells[button.Cell.locY + move, button.Cell.locX - 1]);   
+                    board.cells[button.locY + move, button.locX - 1].bColor = Color.Red;
+                    cells.Add(board.cells[button.locY + move, button.locX - 1]);
                 }
             }
-            if (button.Cell.locX < 7 && board.cells[button.Cell.locY + move, button.Cell.locX + 1].figure != null)
+            if (button.locX < 7 && board.cells[button.locY + move, button.locX + 1].figure != null)
             {
-                if (board.cells[button.Cell.locY + move, button.Cell.locX + 1].figure.color != button.Cell.figure.color)
+                if (board.cells[button.locY + move, button.locX + 1].figure.color != button.figure.color)
                 {
-                    board.cells[button.Cell.locY + move, button.Cell.locX + 1].bColor = Color.Red;
-                    cells.Add(board.cells[button.Cell.locY + move, button.Cell.locX + 1]);
+                    board.cells[button.locY + move, button.locX + 1].bColor = Color.Red;
+                    cells.Add(board.cells[button.locY + move, button.locX + 1]);
                 }
             }
             return cells;

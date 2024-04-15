@@ -15,58 +15,58 @@ namespace Chess
         {
             this.color = color;
         }
-        public override List<Cell> CheckMove(Board board, Cstm_Button button)
+        public override List<Cell> CheckMove(Board board, Cell button)
         {
             List<Cell> cells = new List<Cell>();
-            if (button.Cell.locX > 1)
+            if (button.locX > 1)
             {
-                if (button.Cell.locY > 0)
+                if (button.locY > 0)
                     cells.Add(CalculateMove(cells, board, button, 2, 1));
 
-                if (button.Cell.locY < 7)
+                if (button.locY < 7)
                     cells.Add(CalculateMove(cells, board, button, 2, -1));
             }
-            if (button.Cell.locX < 6)
+            if (button.locX < 6)
             {
-                if (button.Cell.locY > 0)
+                if (button.locY > 0)
                     cells.Add(CalculateMove(cells, board, button, -2, 1));
 
-                if (button.Cell.locY < 7)
+                if (button.locY < 7)
                     cells.Add(CalculateMove(cells, board, button, -2, -1));
             }
-            if (button.Cell.locY > 1)
+            if (button.locY > 1)
             {
-                if (button.Cell.locX > 0)
+                if (button.locX > 0)
                     cells.Add(CalculateMove(cells, board, button, 1, 2));
-                if (button.Cell.locX < 7)
+                if (button.locX < 7)
                     cells.Add(CalculateMove(cells, board, button, -1, 2));
             }
-            if (button.Cell.locY < 6)
+            if (button.locY < 6)
             {
-                if (button.Cell.locX > 0)
+                if (button.locX > 0)
                     cells.Add(CalculateMove(cells, board, button, 1, -2));
-                if (button.Cell.locX < 7)
+                if (button.locX < 7)
                     cells.Add(CalculateMove(cells, board, button, -1, -2));
             }
             foreach (Cell cell in cells)
-            {      
+            {
                 board.cells[cell.locY, cell.locX] = cell;
             }
             return cells;
         }
-        private Cell CalculateMove(List <Cell> cells, Board board, Cstm_Button button, int xOff, int yOff)
+        private Cell CalculateMove(List<Cell> cells, Board board, Cell button, int xOff, int yOff)
         {
-            if (board.cells[button.Cell.locY - yOff, button.Cell.locX - xOff].figure == null)
+            if (board.cells[button.locY - yOff, button.locX - xOff].figure == null)
             {
-                Cell cell = new Cell(button.Cell.locX - xOff, button.Cell.locY - yOff, null, Color.Yellow);
+                Cell cell = new Cell(button.locX - xOff, button.locY - yOff, null, Color.Yellow);
                 return cell;
             }
-            else if (board.cells[button.Cell.locY - yOff, button.Cell.locX - xOff].figure.color != button.Cell.figure.color)
+            else if (board.cells[button.locY - yOff, button.locX - xOff].figure.color != button.figure.color)
             {
-                Cell cell = new Cell(button.Cell.locX - xOff, button.Cell.locY - yOff, null, Color.Red);
+                Cell cell = new Cell(button.locX - xOff, button.locY - yOff, null, Color.Red);
                 return cell;
             }
-            return board.cells[button.Cell.locY - yOff, button.Cell.locX - xOff];
+            return board.cells[button.locY - yOff, button.locX - xOff];
         }
     }
 }
