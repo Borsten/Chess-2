@@ -64,6 +64,7 @@ namespace Chess
             else if (board.cells[button.locY - yOff, button.locX - xOff].figure.color != button.figure.color)
             {
                 Cell cell = new Cell(button.locX - xOff, button.locY - yOff, null, Color.Red);
+                cell.figure = board.cells[button.locY - yOff, button.locX - xOff].figure;
                 return cell;
             }
             return board.cells[button.locY - yOff, button.locX - xOff];

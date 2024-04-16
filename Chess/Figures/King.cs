@@ -66,16 +66,34 @@ namespace Chess
             }
             return board.cells[button.locY + yOff, button.locX + xOff];
         }
-        private bool CheckCell(Board board, Cstm_Button button, List<Cell> cells)
+        private List<Cell> CheckCell(Board board, Cstm_Button button, List<Cell> cells)
         {
             bool threat = false;
             Cell c = new Cell(0, 0, null, Color.White);
             foreach (Cell cell in cells)
             {
+                List<Cell> checkCells = new List<Cell> ();
                 //CheckPawn
                 c = cell;
                 c.figure = new Pawn(button.Cell.figure.color);
+                checkCells = c.figure.CheckMove(board, c);
+
+                foreach (Cell checkCell in checkCells)
+                {
+                    if (checkCell.bColor == Color.Red)
+                    {
+                        
+                    }
+                }
+
+                //CheckKnight
+                c.figure = new Knight(button.Cell.figure.color);
                 c.figure.CheckMove(board, c);
+
+                //CheckQueen
+                c.figure = new Queen(button.Cell.figure.color);
+                c.figure.CheckMove(board, c);
+
             }
             return threat;
         }

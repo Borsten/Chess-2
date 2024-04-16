@@ -136,7 +136,6 @@ namespace Chess
                     }
                 }
             }
-            int x = 0;
         }
 
         public void DrawBoard(Board board, ChessForm form)
@@ -196,6 +195,7 @@ namespace Chess
             if (b.Cell.figure != null)
                 cells = b.Cell.figure.CheckMove(this, b.Cell);
             UpdateBoard(cells);
+            int x = 0;
         }
     }
 }
