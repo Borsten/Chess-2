@@ -50,6 +50,7 @@ namespace Chess
                     cells.Add(CalculateMove(board, button, -1, 1));
                 }
             }
+            cells = CheckCell(board, button, cells);
             return cells;
         }
         private Cell CalculateMove(Board board, Cell button, int xOff, int yOff)
@@ -66,36 +67,60 @@ namespace Chess
             }
             return board.cells[button.locY + yOff, button.locX + xOff];
         }
-        private List<Cell> CheckCell(Board board, Cstm_Button button, List<Cell> cells)
+        private List<Cell> CheckCell(Board board, Cell button, List<Cell> cells)
         {
-            bool threat = false;
             Cell c = new Cell(0, 0, null, Color.White);
+            List<Cell> check = new List<Cell>();
+            List<Cell> removeCell = new List<Cell>();
             foreach (Cell cell in cells)
             {
-                List<Cell> checkCells = new List<Cell> ();
-                //CheckPawn
-                c = cell;
-                c.figure = new Pawn(button.Cell.figure.color);
-                checkCells = c.figure.CheckMove(board, c);
-
-                foreach (Cell checkCell in checkCells)
+                c = cell.DeepCopy(cell);
+                c.figure = new Pawn(button.figure.color);
+                check = c.figure.CheckMove(board, c);
+                foreach (Cell checkCell in check)
                 {
-                    if (checkCell.bColor == Color.Red)
+                    if (checkCell.bColor == Color.Red && checkCell.figure.GetType() == typeof(Pawn))
                     {
-                        
+                        removeCell.Add(cell); 
+                        break;
                     }
                 }
-
-                //CheckKnight
-                c.figure = new Knight(button.Cell.figure.color);
-                c.figure.CheckMove(board, c);
-
-                //CheckQueen
-                c.figure = new Queen(button.Cell.figure.color);
-                c.figure.CheckMove(board, c);
-
+                c.figure = new Knight(button.figure.color);
+                check = c.figure.CheckMove(board, c);
+                foreach (Cell checkCell in check)
+                {
+                    if (checkCell.bColor == Color.Red && checkCell.figure.GetType() == typeof(Knight))
+                    {
+                        removeCell.Add(cell);
+                        break;
+                    }
+                }
+                c.figure = new Bishop(button.figure.color);
+                check = c.figure.CheckMove(board, c);
+                foreach (Cell checkCell in check)
+                {
+                    if (checkCell.bColor == Color.Red && (checkCell.figure.GetType() == typeof(Bishop) || checkCell.figure.GetType() == typeof(Queen)))
+                    {
+                        removeCell.Add(cell);
+                        break;
+                    }
+                }
+                c.figure = new Rook(button.figure.color);
+                check = c.figure.CheckMove(board, c);
+                foreach (Cell checkCell in check)
+                {
+                    if (checkCell.bColor == Color.Red && (checkCell.figure.GetType() == typeof(Rook) || checkCell.figure.GetType() == typeof(Queen)))
+                    {
+                        removeCell.Add(cell);
+                        break;
+                    }
+                }
             }
-            return threat;
+            foreach (Cell remove in removeCell) 
+            { 
+                cells.Remove(remove);
+            }
+            return cells;
         }
     }
 }

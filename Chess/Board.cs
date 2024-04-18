@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -15,8 +16,9 @@ namespace Chess
     {
         public Cell[,] cells = new Cell[8, 8];
         private Color color = Color.White;
-
+        private Cell lastClicked;
         private ChessForm form;
+        private string gameState = "White";
 
         public Board GetBoard()
         {
@@ -66,17 +68,11 @@ namespace Chess
                                     break;
                             }
                         break;
-                        case 4:
-                            if (locX == 4)
-                                figure = new King("Black");
-                            else
-                                figure = null;
-                            break;
-                        //case 1:
-                        //    figure = new Pawn("Black");
-                        //    break;
-                        case 5:
+                        case 1:
                             figure = new Pawn("Black");
+                            break;
+                        case 6:
+                            figure = new Pawn("White");
                             break;
                         case 7:
                             switch (locX)
@@ -123,8 +119,8 @@ namespace Chess
         {
             foreach (Cell c in cells)
             {
-                if (c.bColor == Color.Red || c.bColor == Color.Yellow)
-                {
+                //if (c.bColor == Color.Red || c.bColor == Color.Yellow)
+                //{
                     form.Buttons[c.locY, c.locX].Cell = c;
                     form.Buttons[c.locY, c.locX].BackColor = c.bColor;                   
                     form.Buttons[c.locY, c.locX].Enabled = true;
@@ -134,7 +130,11 @@ namespace Chess
                         if (c.bColor == Color.Black)
                             form.Buttons[c.locY, c.locX].ForeColor = Color.White;
                     }
-                }
+                    else
+                    {
+                        form.Buttons[c.locY, c.locX].Text = null;
+                    }
+                //}
             }
         }
 
@@ -176,6 +176,36 @@ namespace Chess
             Cstm_Button b = (Cstm_Button)sender;
             int locX = b.Cell.locX;
             int locY = b.Cell.locY;
+
+            if (b.BackColor == Color.Yellow)
+            {
+                ResetForm(locX, locY);
+                b.Cell.figure = lastClicked.figure;
+                lastClicked.figure = null;
+                lastClicked.bColor = form.Buttons[lastClicked.locY, lastClicked.locX].Cell.bColor;
+                b.Cell.bColor = form.Buttons[b.Cell.locY, b.Cell.locX].Cell.bColor;
+                cells.Add(b.Cell);
+                cells.Add(lastClicked);
+                if (gameState == "White")
+                    gameState = "Black";
+                else
+                    gameState = "White";
+            }
+
+            else
+            {
+                ResetForm(locX, locY);
+                if (b.Cell.figure != null)
+                {
+                    lastClicked = b.Cell.DeepCopy(b.Cell);
+                    cells = b.Cell.figure.CheckMove(this, b.Cell);
+                }
+            }
+            UpdateBoard(cells);
+        }
+
+        private void ResetForm(int locX, int locY)
+        {
             foreach (Cell cell in form.board.cells)
             {
                 if (cell.figure == null)
@@ -192,10 +222,6 @@ namespace Chess
                     this.cells[locY, locX].bColor = Color.Black;
                 }
             }
-            if (b.Cell.figure != null)
-                cells = b.Cell.figure.CheckMove(this, b.Cell);
-            UpdateBoard(cells);
-            int x = 0;
         }
     }
 }
