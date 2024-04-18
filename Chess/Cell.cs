@@ -22,6 +22,11 @@ namespace Chess
             this.bColor = bColor;
         }
 
+        public Cell DeepCopy(Cell cell)
+        {
+            Cell c = new Cell(cell.locX, cell.locY, cell.figure, cell.bColor);
+            return c;
+        }
         public void test()
         {
             this.bColor = Color.White;
